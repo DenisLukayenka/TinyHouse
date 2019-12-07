@@ -38,44 +38,45 @@ public class GameManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(Input.GetKey(KeyCode.Space))
+        this.UpdateWalls();
+    }
+
+    private void UpdateWalls()
+    {
+        var hittedWalls = this.raycastManager.CastRayToWalls(this.walls, this.coreCamera.gameObject).Distinct().ToList();
+        var activatedWalls = new List<CoroutineObject>();
+        Debug.Log("hittedWalls: " + string.Join(", ", hittedWalls));
+
+        foreach(var inactiveWall in this.inactiveWalls)
         {
-            var hittedWalls = this.raycastManager.CastRayToWalls(this.walls, this.coreCamera.gameObject).Distinct().ToList();
-            var activatedWalls = new List<CoroutineObject>();
-            Debug.Log("hittedWalls: " + string.Join(", ", hittedWalls));
+            var target = hittedWalls.FirstOrDefault(hitted => hitted == inactiveWall.GameObject);
 
-            foreach(var inactiveWall in this.inactiveWalls)
+            if(target is null)
             {
-                var target = hittedWalls.FirstOrDefault(hitted => hitted == inactiveWall.GameObject);
-
-                if(target is null)
-                {
-                    activatedWalls.Add(inactiveWall);
-                }
+                activatedWalls.Add(inactiveWall);
             }
+        }
 
-            activatedWalls.ForEach(wall => 
+        activatedWalls.ForEach(wall => 
+        {
+            if(wall.IsUpdatable)
             {
-                if(wall.IsUpdatable)
-                {
-                    this.inactiveWalls.Remove(wall);
-                    this.StartCoroutine(this.DownWall(wall));
-                    this.activeWalls.Add(wall);
-                }
-            });
-
-            for(int i = 0; i < hittedWalls.Count; i++)
-            {
-                var target = this.activeWalls.FirstOrDefault(a => a.GameObject == hittedWalls[i]);
-
-                if(target != null && target.IsUpdatable)
-                {
-                    this.activeWalls.Remove(target);
-                    this.StartCoroutine(this.UpWall(target, this.wallRelativeYUp));
-                    this.inactiveWalls.Add(target);
-                }
+                this.inactiveWalls.Remove(wall);
+                this.StartCoroutine(this.DownWall(wall));
+                this.activeWalls.Add(wall);
             }
-            Debug.Log("_______________________________________________________________");
+        });
+
+        for(int i = 0; i < hittedWalls.Count; i++)
+        {
+            var target = this.activeWalls.FirstOrDefault(a => a.GameObject == hittedWalls[i]);
+
+            if(target != null && target.IsUpdatable)
+            {
+                this.activeWalls.Remove(target);
+                this.StartCoroutine(this.UpWall(target, this.wallRelativeYUp));
+                this.inactiveWalls.Add(target);
+            }
         }
     }
 
@@ -86,8 +87,6 @@ public class GameManager : MonoBehaviour
 
         while(wall.transform.localPosition.y <= newY)
         {
-            Debug.Log($"UpWall {coroutineObject.IsUpdatable}");
-
             var offSet = Vector3.up * Time.deltaTime * wallSpeed / wall.transform.position.y * 7f;
             if(offSet.y + wall.transform.localPosition.y < newY)
             {
@@ -97,7 +96,6 @@ public class GameManager : MonoBehaviour
             else
             {
                 coroutineObject.IsUpdatable = true;
-                Debug.Log($"UpWall {coroutineObject.IsUpdatable} + {wall.transform.name}");
                 wall.transform.localPosition = new Vector3(0, newY, 0);
                 yield break;
             }
@@ -112,7 +110,6 @@ public class GameManager : MonoBehaviour
         while(wall.transform.position.y >= wall.transform.parent.position.y)
         {
             var offSet = (Vector3.up * Time.deltaTime * wallSpeed * Mathf.Abs(wall.transform.localPosition.y));
-            Debug.Log($"DownWall {coroutineObject.IsUpdatable} + {wall.transform.name} + {offSet}");
 
             if(offSet != Vector3.zero && offSet.y < wall.transform.localPosition.y)
             {
@@ -123,7 +120,6 @@ public class GameManager : MonoBehaviour
             {
                 coroutineObject.IsUpdatable = true;
                 wall.transform.localPosition = Vector3.zero;
-                Debug.Log($"UpWall {coroutineObject.IsUpdatable}");
                 yield break;
             }
         }

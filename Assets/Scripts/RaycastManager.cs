@@ -12,8 +12,6 @@ public class RaycastManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /*var oldMask = mainCamera.cullingMask;
-        mainCamera.cullingMask = (1 << LayerMask.NameToLayer("Walls"));*/
     }
 
     // Update is called once per frame
@@ -26,7 +24,7 @@ public class RaycastManager : MonoBehaviour
 
     public IEnumerable<GameObject> CastRayToWalls(List<GameObject> targets, GameObject shooter)
     {
-        LayerMask mask = LayerMask.GetMask("Walls");
+        LayerMask mask = 1 << LayerMask.NameToLayer(maskName);
 
         foreach(var target in targets)
         {
@@ -38,22 +36,6 @@ public class RaycastManager : MonoBehaviour
                 yield return hit.collider.gameObject;
             }
         }
-    }
-
-    void FixedUpdate()
-    {
-        Transform transform = Camera.main.transform;
-
-        /*if (Input.GetKeyUp("space"))
-        {
-            // Check for a Wall.
-            LayerMask mask = LayerMask.GetMask("Walls");
-            // Check if a Wall is hit.
-            if (Physics.Raycast(transform.position, transform.forward, 20.0f, mask))
-            {
-                Debug.Log("Fired and hit a wall");
-            }
-        }*/
     }
 
     IEnumerator RotateMe(Vector3 byAngles, float inTime) 
