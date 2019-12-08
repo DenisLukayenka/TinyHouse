@@ -29,9 +29,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("Inactive: " + string.Join(", ", inactiveWalls.Select(x => x.GameObject.transform.name)));
         Debug.Log("activeWalls: " + string.Join(", ", activeWalls.Select(x => x.GameObject.transform.name)));
 
-        foreach(var wall in inactiveWalls)
+        var wallsRb = castedWalls.Select(c => c.transform.GetChild(0).GetComponent<Rigidbody>());
+        foreach(var w in wallsRb)
         {
-            this.StartCoroutine(this.UpWall(wall, wallRelativeYUp));
+            w.AddForce(Vector3.up * 100f, ForceMode.Impulse);
         }
     }
 
@@ -60,22 +61,32 @@ public class GameManager : MonoBehaviour
 
             activatedWalls.ForEach(wall => 
             {
-                if(wall.IsUpdatable)
+                var childWallRb = wall.GameObject.transform.GetChild(0).GetComponent<Rigidbody>();
+
+                RemoveVelocity(childWallRb);
+                childWallRb.AddForce(Vector3.down * 20f, ForceMode.Impulse);
+                this.inactiveWalls.Remove(wall);
+                this.activeWalls.Add(wall);
+
+                /*if(wall.IsUpdatable)
                 {
                     this.inactiveWalls.Remove(wall);
                     this.StartCoroutine(this.DownWall(wall));
                     this.activeWalls.Add(wall);
-                }
+                }*/
             });
 
             for(int i = 0; i < hittedWalls.Count; i++)
             {
                 var target = this.activeWalls.FirstOrDefault(a => a.GameObject == hittedWalls[i]);
-
-                if(target != null && target.IsUpdatable)
+                
+                if(target != null)
                 {
+                    var childWallRb = target.GameObject.transform.GetChild(0).GetComponent<Rigidbody>();
+                    RemoveVelocity(childWallRb);
+                    childWallRb.AddForce(Vector3.up * 20f, ForceMode.Impulse);
                     this.activeWalls.Remove(target);
-                    this.StartCoroutine(this.UpWall(target, this.wallRelativeYUp));
+                    //this.StartCoroutine(this.UpWall(target, this.wallRelativeYUp));
                     this.inactiveWalls.Add(target);
                 }
             }
@@ -122,5 +133,11 @@ public class GameManager : MonoBehaviour
     {
         public GameObject GameObject{ get; set; }
         public bool IsUpdatable { get; set; } = true;
+    }
+
+    private void RemoveVelocity(Rigidbody rb)
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 }
