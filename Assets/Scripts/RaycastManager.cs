@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class RaycastManager : MonoBehaviour
 {
-    [SerializeField]
-    private Camera mainCamera;
     private float cameraRotation;
     private string maskName = "Walls";
 
