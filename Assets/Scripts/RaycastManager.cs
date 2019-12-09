@@ -15,9 +15,6 @@ public class RaycastManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       if(Input.GetKeyDown("e")){
-            StartCoroutine(RotateMe(Vector3.up * 90, 0.8f));
-        }
     }
 
     public IEnumerable<GameObject> CastRayToWalls(List<GameObject> targets, GameObject shooter)
