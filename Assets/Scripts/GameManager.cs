@@ -30,7 +30,6 @@ public class GameManager : MonoBehaviour
     void FixedUpdate()
     {
         this.UpdateWalls();
-
         if(Input.GetMouseButtonDown(0))
         {
             this.CheckForGameItem();
@@ -40,7 +39,7 @@ public class GameManager : MonoBehaviour
     private void UpdateWalls()
     {
         var hittedWalls = this.raycastManager.CastRayToWalls(this.walls, Camera.main.gameObject).Distinct().ToList();
-        Debug.Log("hittedWalls: " + string.Join(", ", hittedWalls));
+        //Debug.Log("hittedWalls: " + string.Join(", ", hittedWalls));
 
         var newActivatedWalls = this.inactiveWalls.Where(w => !hittedWalls.Contains(w)).ToList();
         newActivatedWalls.ForEach(x => 

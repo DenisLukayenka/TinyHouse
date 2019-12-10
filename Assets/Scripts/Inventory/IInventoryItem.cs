@@ -6,4 +6,6 @@ public interface IInventoryItem
     Sprite Image { get; }
 
     void OnPickup();
+
+    void OnDrop();
 }

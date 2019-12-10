@@ -5,13 +5,20 @@ using UnityEngine.EventSystems;
 
 public class ItemDropHandler : MonoBehaviour, IDropHandler
 {
+	public Inventory Inventory;
+
 	public void OnDrop(PointerEventData eventData)
 	{
 		RectTransform invPanel = transform as RectTransform;
 
         if(!RectTransformUtility.RectangleContainsScreenPoint(invPanel, Input.mousePosition))
         {
-            Debug.Log("Drop item");
+            IInventoryItem item = eventData.pointerDrag.gameObject.GetComponent<ItemDragHandler>().Item;
+
+			if(item != null)
+			{
+				this.Inventory.DropItem(item);
+			}
         }
 	}
 }

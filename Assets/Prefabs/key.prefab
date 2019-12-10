@@ -88,11 +88,11 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9112108344632813024}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Convex: 1
-  m_CookingOptions: 14
+  m_CookingOptions: -1
   m_Mesh: {fileID: -4146931179504492528, guid: eaf2d0c2abff3494892d8cbedff6bf63, type: 3}
 --- !u!114 &8820211548840309623
 MonoBehaviour:
@@ -106,4 +106,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 102c3ab155df8064fb22b52300671a91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Image: {fileID: 21300000, guid: d75c08d8434b71644a64cb666e07096f, type: 3}
+  _Image: {fileID: 21300000, guid: 07925148751880f468a665c2e9b74bba, type: 3}
