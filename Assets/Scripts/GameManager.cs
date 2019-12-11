@@ -11,9 +11,8 @@ public class GameManager : MonoBehaviour
     private RaycastManager raycastManager;
     private MoveManager moveManager;
 
-    
     [SerializeField]
-    private Camera coreCamera;
+    private Inventory Inventory;
 
     void Start()
     {
@@ -21,7 +20,7 @@ public class GameManager : MonoBehaviour
         this.raycastManager = GameObject.Find("RaycastManager")?.GetComponent<RaycastManager>();
         this.moveManager = GameObject.Find("MoveManager")?.GetComponent<MoveManager>();
 
-        var castedWalls = this.raycastManager.CastRayToWalls(this.walls, this.coreCamera.gameObject).Distinct();
+        var castedWalls = this.raycastManager.CastRayToWalls(this.walls, Camera.main.gameObject).Distinct();
         this.inactiveWalls = new HashSet<GameObject>(castedWalls);
         this.activeWalls = new HashSet<GameObject>(this.walls.Where(w => !this.inactiveWalls.Contains(w)));
 
@@ -31,31 +30,52 @@ public class GameManager : MonoBehaviour
     void FixedUpdate()
     {
         this.UpdateWalls();
+        if(Input.GetMouseButtonDown(0))
+        {
+            this.CheckForGameItem();
+        }
     }
 
     private void UpdateWalls()
     {
+        var hittedWalls = this.raycastManager.CastRayToWalls(this.walls, Camera.main.gameObject).Distinct().ToList();
+        //Debug.Log("hittedWalls: " + string.Join(", ", hittedWalls));
+
+        var newActivatedWalls = this.inactiveWalls.Where(w => !hittedWalls.Contains(w)).ToList();
+        newActivatedWalls.ForEach(x => 
+        {
+            this.inactiveWalls.Remove(x);
+            this.activeWalls.Add(x);
+        });
+        this.moveManager.UpdateForceToList(this.ConvertToChildsList(newActivatedWalls), Vector3.down);
+
+
+        var newDisabledWalls = hittedWalls.Where(w => this.activeWalls.Contains(w)).ToList();
+        newDisabledWalls.ForEach(x => 
+        {
+            this.activeWalls.Remove(x);
+            this.inactiveWalls.Add(x);
+        });
+        this.moveManager.UpdateForceToList(this.ConvertToChildsList(newDisabledWalls), Vector3.up);
         
-            var hittedWalls = this.raycastManager.CastRayToWalls(this.walls, this.coreCamera.gameObject).Distinct().ToList();
-            Debug.Log("hittedWalls: " + string.Join(", ", hittedWalls));
+    }
 
-            var newActivatedWalls = this.inactiveWalls.Where(w => !hittedWalls.Contains(w)).ToList();
-            newActivatedWalls.ForEach(x => 
+    private void CheckForGameItem()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        LayerMask mask = 1 << LayerMask.NameToLayer("GameItems");
+
+        if(Physics.Raycast(ray, out hit, Mathf.Infinity, mask, QueryTriggerInteraction.Collide))
+        {
+            Debug.Log(hit.collider.transform.name);
+            
+            IInventoryItem item = hit.collider.GetComponent<IInventoryItem>();
+            if(item != null)
             {
-                this.inactiveWalls.Remove(x);
-                this.activeWalls.Add(x);
-            });
-            this.moveManager.UpdateForceToList(this.ConvertToChildsList(newActivatedWalls), Vector3.down);
-
-
-            var newDisabledWalls = hittedWalls.Where(w => this.activeWalls.Contains(w)).ToList();
-            newDisabledWalls.ForEach(x => 
-            {
-                this.activeWalls.Remove(x);
-                this.inactiveWalls.Add(x);
-            });
-            this.moveManager.UpdateForceToList(this.ConvertToChildsList(newDisabledWalls), Vector3.up);
-        
+                Inventory.AddItem(item);
+            }
+        }
     }
 
     private IEnumerable<GameObject> ConvertToChildsList(IEnumerable<GameObject> list)

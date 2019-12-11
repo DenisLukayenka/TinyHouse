@@ -7,19 +7,6 @@ public class RaycastManager : MonoBehaviour
     private float cameraRotation;
     private string maskName = "Walls";
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-       if(Input.GetKeyDown("e")){
-            StartCoroutine(RotateMe(Vector3.up * 90, 0.8f));
-        }
-    }
-
     public IEnumerable<GameObject> CastRayToWalls(List<GameObject> targets, GameObject shooter)
     {
         LayerMask mask = 1 << LayerMask.NameToLayer(maskName);

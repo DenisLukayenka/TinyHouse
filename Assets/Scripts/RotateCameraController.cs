@@ -9,7 +9,7 @@ public class RotateCameraController : MonoBehaviour
 
     private float cameraZoom = 0.5f;
     private float cameraZoomSpeed = 10f;
-    private float maxZoom = 1f;
+    private float maxZoom = 0.7f;
     private float minZoom = 0f;
 
     void Start()
@@ -26,14 +26,34 @@ public class RotateCameraController : MonoBehaviour
 
         if((cameraZoomChange > 0 && cameraZoom < maxZoom) || (cameraZoomChange < 0 && cameraZoom > minZoom))
         {
-            Debug.Log(this.cameraZoom);
-
-            Vector3 direction = this.transform.position - Camera.main.transform.position;
-            Debug.DrawRay(Camera.main.transform.position, direction, Color.green);
-
-            Camera.main.transform.Translate(direction * cameraZoomChange, Space.World);
-
-            this.cameraZoom += cameraZoomChange;
+            if(Camera.main.orthographic == false)
+            {
+                this.ZoomPerspectiveCamera(cameraZoomChange);
+            }
+            else
+            {
+                this.ZoomOrthographicCamera(cameraZoomChange);
+            }
         }
+    }
+
+    private void ZoomPerspectiveCamera(float zoomChange)
+    {
+        Debug.Log(this.cameraZoom);
+
+        Vector3 direction = this.transform.position - Camera.main.transform.position;
+        Debug.DrawRay(Camera.main.transform.position, direction, Color.green);
+
+        Camera.main.transform.Translate(direction * zoomChange, Space.World);
+
+        this.cameraZoom += zoomChange;
+    }
+
+    private void ZoomOrthographicCamera(float zoomChange)
+    {
+        Debug.Log(this.cameraZoom);
+        this.cameraZoom += zoomChange;
+
+        Camera.main.orthographicSize -= zoomChange * 7f;
     }
 }
