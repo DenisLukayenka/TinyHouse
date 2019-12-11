@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 
-public class ItemBase : MonoBehaviour, IInventoryItem
+public class ItemBase : GameItemBase, IInventoryItem
 {
     private string _ignoreLayer = "Walls";
 
 	public virtual string ItemName => "Base_item";
-
     public Sprite _Image = null;
 	public Sprite Image => this._Image;
 
@@ -25,5 +24,10 @@ public class ItemBase : MonoBehaviour, IInventoryItem
             gameObject.SetActive(true);
             gameObject.transform.position = hit.point;
         }
+	}
+
+	public override bool Execute(GameObject obj)
+	{
+		throw new System.NotImplementedException();
 	}
 }

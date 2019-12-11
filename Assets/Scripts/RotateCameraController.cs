@@ -9,8 +9,8 @@ public class RotateCameraController : MonoBehaviour
 
     private float cameraZoom = 0.5f;
     private float cameraZoomSpeed = 10f;
-    private float maxZoom = 0.7f;
-    private float minZoom = 0f;
+    private float maxZoom = 1.5f;
+    private float minZoom = 0.3f;
 
     void Start()
     {

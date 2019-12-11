@@ -25,21 +25,25 @@ public class GameManager : MonoBehaviour
         this.activeWalls = new HashSet<GameObject>(this.walls.Where(w => !this.inactiveWalls.Contains(w)));
 
         this.moveManager.UpdateForceToList(this.ConvertToChildsList(this.inactiveWalls.ToList()), Vector3.up);
+
+        Camera.main.eventMask = ~(1 << LayerMask.NameToLayer("Walls"));
     }
 
     void FixedUpdate()
     {
-        this.UpdateWalls();
         if(Input.GetMouseButtonDown(0))
         {
             this.CheckForGameItem();
+        }
+        if(Input.GetAxis("Horizontal") != 0)
+        {
+            this.UpdateWalls();
         }
     }
 
     private void UpdateWalls()
     {
         var hittedWalls = this.raycastManager.CastRayToWalls(this.walls, Camera.main.gameObject).Distinct().ToList();
-        //Debug.Log("hittedWalls: " + string.Join(", ", hittedWalls));
 
         var newActivatedWalls = this.inactiveWalls.Where(w => !hittedWalls.Contains(w)).ToList();
         newActivatedWalls.ForEach(x => 
@@ -57,7 +61,6 @@ public class GameManager : MonoBehaviour
             this.inactiveWalls.Add(x);
         });
         this.moveManager.UpdateForceToList(this.ConvertToChildsList(newDisabledWalls), Vector3.up);
-        
     }
 
     private void CheckForGameItem()
