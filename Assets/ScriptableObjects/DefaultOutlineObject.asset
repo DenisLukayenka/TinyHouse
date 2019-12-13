@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2902345d43cbf0b47a2315ae254b8fb9, type: 3}
   m_Name: DefaultOutlineObject
   m_EditorClassIdentifier: 
-  OutlineMaterial: {fileID: 0}
+  OutlineMaterial: {fileID: 2100000, guid: 243f4df3c8e79644b974bbedf882fb28, type: 2}
   PrevMaterial: {fileID: 0}
