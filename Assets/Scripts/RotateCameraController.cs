@@ -1,11 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class RotateCameraController : MonoBehaviour
 {
     [SerializeField]
     private float rotateSpeed = 10f;
+
+    [SerializeField]
+    private GameObject FocalPoint;
 
     private float cameraZoom = 0.5f;
     private float cameraZoomSpeed = 10f;
