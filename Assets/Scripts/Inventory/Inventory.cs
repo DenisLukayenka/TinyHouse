@@ -29,20 +29,9 @@ public class Inventory : MonoBehaviour
 
     public void DropItem(IInventoryItem item)
     {
-        if(this.items.Remove(item))
+        if(item.OnDrop() && this.items.Remove(item))
         {
-            item.OnDrop();
-            Debug.Log("Drop item inventory");
-
-            Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-            Debug.Log("Drop item inventory2");
-            if(collider != null)
-            {
-                collider.enabled = true;
-
-                Debug.Log("HUD remove call");
-                ItemDropped(this, new InventoryEventArgs(item));
-            }
+            ItemDropped(this, new InventoryEventArgs(item));
         }
     }
 }

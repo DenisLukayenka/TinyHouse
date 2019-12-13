@@ -4,5 +4,5 @@
 
     void OnPickup();
 
-    void OnDrop();
+    bool OnDrop();
 }
