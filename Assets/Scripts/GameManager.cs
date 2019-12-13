@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     private RaycastManager raycastManager;
     private MoveManager moveManager;
 
+    public bool IsPaused = false;
+
     [SerializeField]
     private Inventory Inventory;
 
@@ -31,13 +33,16 @@ public class GameManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(!IsPaused)
         {
-            this.CheckForGameItem();
-        }
-        if(Input.GetAxis("Horizontal") != 0)
-        {
-            this.UpdateWalls();
+            if(Input.GetMouseButtonDown(0))
+            {
+                this.CheckForGameItem();
+            }
+            if(Input.GetAxis("Horizontal") != 0)
+            {
+                this.UpdateWalls();
+            }
         }
     }
 

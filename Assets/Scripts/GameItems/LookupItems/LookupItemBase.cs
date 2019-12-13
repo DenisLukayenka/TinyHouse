@@ -4,28 +4,36 @@ using UnityEngine.EventSystems;
 public class LookupItemBase : MonoBehaviour, ILookupItem
 {
     [SerializeField]
-    private GameObject FocusPoint;
+    private Camera CameraToFocus;
+
+	[SerializeField]
+	private Camera CameraToHide;
+
+	[SerializeField]
+	private GameManager GameManager;
 
     private Vector3 _prevCameraPosition;
     private Quaternion _prevCameraRotation;
 
 	public void Lookup()
 	{
-        this._prevCameraPosition = Camera.main.transform.position;
-        this._prevCameraRotation = Camera.main.transform.rotation;
-
-        Camera.main.transform.position = FocusPoint.transform.position;
-        Camera.main.transform.rotation = FocusPoint.transform.rotation;
+		GameManager.IsPaused = true;
+		
+        CameraToHide.gameObject.SetActive(false);
+		CameraToFocus.gameObject.SetActive(true);
 	}
 
 	public void OnPointerClick(PointerEventData eventData)
 	{
-        Debug.Log("OnPointer");
+        Debug.Log("OnPointer lookup");
 		this.Lookup();
 	}
 
 	public void UnFocus()
 	{
-		throw new System.NotImplementedException();
+		CameraToFocus.gameObject.SetActive(false);
+		CameraToHide.gameObject.SetActive(true);
+
+		GameManager.IsPaused = false;
 	}
 }

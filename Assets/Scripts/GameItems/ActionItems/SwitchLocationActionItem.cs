@@ -23,13 +23,15 @@ public class SwitchLocationActionItem : ActionItemBase, IPointerEnterHandler, IP
 	[SerializeField]
 	protected TMP_Text TextMind;
 
+	[SerializeField]
+	protected LevelChanger levelChanger;
+
 	public override void Execute()
 	{
 		MindImage.gameObject.SetActive(false);
 		TextMind.text = "";
 
-        _currentLocation.SetActive(false);
-        _targetLocation.SetActive(true);
+		this.levelChanger.FadeToLocation(_currentLocation, _targetLocation);
 	}
 
     public virtual void OnPointerEnter(PointerEventData eventData)
