@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-public class ItemBase : GameItemBase, IInventoryItem
+public class InventoryItemBase : MonoBehaviour, IInventoryItem
 {
     private string _ignoreLayer = "Walls";
 
-	public virtual string ItemName => "Base_item";
-    public Sprite _Image = null;
-	public Sprite Image => this._Image;
+	[SerializeField]
+	public InventoryItemObjectBase _InventoryItemObject;
+	public InventoryItemObjectBase InventoryItemObject => this._InventoryItemObject;
 
 	public virtual void OnPickup()
 	{
@@ -24,10 +24,5 @@ public class ItemBase : GameItemBase, IInventoryItem
             gameObject.SetActive(true);
             gameObject.transform.position = hit.point;
         }
-	}
-
-	public override bool Execute(GameObject obj)
-	{
-		throw new System.NotImplementedException();
 	}
 }

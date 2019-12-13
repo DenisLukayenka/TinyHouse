@@ -24,7 +24,7 @@ public class HUD : MonoBehaviour
             if(!image.enabled)
             {
                 image.enabled = true;
-                image.sprite = args.Item.Image;
+                image.sprite = args.Item.InventoryItemObject.Image;
                 itemDragHandler.Item = args.Item;
                 break;
             }

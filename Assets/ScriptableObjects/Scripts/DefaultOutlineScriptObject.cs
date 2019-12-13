@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu()]
-public class OutlineItemBase : ScriptableObject
+public class DefaultOutlineScriptObject : ScriptableObject
 {
     public Material OutlineMaterial;
     public Material PrevMaterial;
