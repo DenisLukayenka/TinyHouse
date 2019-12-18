@@ -6,7 +6,7 @@ public class MenuManager : MonoBehaviour
     public void OnExitButtonPress()
     {
         Debug.Log("Quit game");
-        
+
         Application.Quit();
     }
 
