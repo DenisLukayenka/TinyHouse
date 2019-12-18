@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -14,5 +15,16 @@ public class GameController : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void LoadMainMenu()
+    {
+        Debug.Log("Load main menu");
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }
